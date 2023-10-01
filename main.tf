@@ -99,7 +99,7 @@ resource "aws_eip" "nat_eip" {
 
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat_eip.id
-  subnet_id     = lookup(aws_subnet.private, "a").id
+  subnet_id     = lookup(aws_subnet.public, "a").id
 
   tags = {
     Name     = "a-nat"
@@ -111,8 +111,8 @@ resource "aws_route_table" "private_route_table" {
   vpc_id = aws_vpc.vpc.id
 
   route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.nat.id
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat.id
   }
 
   tags = {
