@@ -26,39 +26,55 @@ resource "aws_internet_gateway" "igw" {
 }
 
 ################################################################
-## public subnet
+## webserver subnet
 ################################################################
-resource "aws_subnet" "public" {
-  for_each          = var.public_subnets
+resource "aws_subnet" "webserver_subnets" {
+  for_each          = var.webserver_subnets
   vpc_id            = aws_vpc.vpc.id
   cidr_block        = each.value
   availability_zone = "${var.vpc_region}${each.key}"
 
   tags = {
-    Name     = "${var.vpc_name}-${var.vpc_region}${each.key}-public"
+    Name     = "${var.vpc_name}-${var.vpc_region}${each.key}-webserver"
     Resource = "subnet"
-    Property = "public"
+    Property = "webserver"
   }
 }
 
 ################################################################
-## public subnet
+## was subnet
 ################################################################
-resource "aws_subnet" "private" {
-  for_each          = var.private_subnets
+resource "aws_subnet" "was_subnets" {
+  for_each          = var.was_subnets
   vpc_id            = aws_vpc.vpc.id
   cidr_block        = each.value
   availability_zone = "${var.vpc_region}${each.key}"
 
   tags = {
-    Name     = "${var.vpc_name}-${var.vpc_region}${each.key}-private"
+    Name     = "${var.vpc_name}-${var.vpc_region}${each.key}-was"
     Resource = "subnet"
-    Property = "private"
+    Property = "was"
   }
 }
 
 ################################################################
-## public subnet Routing
+## db subnet
+################################################################
+resource "aws_subnet" "db_subnets" {
+  for_each          = var.db_subnets
+  vpc_id            = aws_vpc.vpc.id
+  cidr_block        = each.value
+  availability_zone = "${var.vpc_region}${each.key}"
+
+  tags = {
+    Name     = "${var.vpc_name}-${var.vpc_region}${each.key}-db"
+    Resource = "subnet"
+    Property = "db"
+  }
+}
+
+################################################################
+## webserver subnet Routing
 ################################################################
 resource "aws_route_table" "public_route_table" {
   vpc_id = aws_vpc.vpc.id
@@ -75,21 +91,18 @@ resource "aws_route_table" "public_route_table" {
 }
 
 resource "aws_route_table_association" "public-rt-mapping" {
-  for_each = aws_subnet.public
+  for_each = aws_subnet.webserver_subnets
 
   subnet_id      = each.value.id
   route_table_id = aws_route_table.public_route_table.id
 }
 
 ################################################################
-## private subnet Routing
+## was subnet Routing
 ################################################################
 resource "aws_eip" "nat_eip" {
-  vpc = true
 
-  lifecycle {
-    create_before_destroy = true
-  }
+  domain = "vpc"
 
   tags = {
     Name     = "nat-eip"
@@ -99,7 +112,7 @@ resource "aws_eip" "nat_eip" {
 
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat_eip.id
-  subnet_id     = lookup(aws_subnet.public, "a").id
+  subnet_id     = lookup(aws_subnet.webserver_subnets, "a").id
 
   tags = {
     Name     = "a-nat"
@@ -122,8 +135,27 @@ resource "aws_route_table" "private_route_table" {
 }
 
 resource "aws_route_table_association" "private-rt-mapping" {
-  for_each = aws_subnet.private
+  for_each = aws_subnet.was_subnets
 
   subnet_id      = each.value.id
   route_table_id = aws_route_table.private_route_table.id
+}
+
+################################################################
+## db subnet Routing
+################################################################
+resource "aws_route_table" "db_route_table" {
+  vpc_id = aws_vpc.vpc.id
+
+  tags = {
+    Name     = "db-rt"
+    Resource = "route-table"
+  }
+}
+
+resource "aws_route_table_association" "db-rt-mapping" {
+  for_each = aws_subnet.db_subnets
+
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.db_route_table.id
 }

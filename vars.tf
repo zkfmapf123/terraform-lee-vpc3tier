@@ -20,18 +20,25 @@ variable "vpc_cidr" {
 }
 
 ################################################################
-## public subnet
+## webserver subnet
 ################################################################
-variable "public_subnets" {
+variable "webserver_subnets" {
   type        = map(string)
   description = "key : a or b, value : cidr_block"
 }
 
 ################################################################
-## private subnet
+## was subnet
 ################################################################
-variable "private_subnets" {
+variable "was_subnets" {
   type        = map(string)
   description = "key : a or b, value : cidr_block"
 }
 
+################################################################
+## db subnet
+################################################################
+variable "db_subnets" {
+  type        = map(string)
+  description = "key : a or b, value : cidr_block"
+}
