@@ -102,8 +102,6 @@ resource "aws_route_table_association" "public-rt-mapping" {
 ################################################################
 resource "aws_eip" "nat_eip" {
 
-  domain = "vpc"
-
   tags = {
     Name     = "nat-eip"
     Resource = "nat-gateway"
