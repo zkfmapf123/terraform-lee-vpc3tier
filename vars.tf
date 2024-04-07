@@ -1,6 +1,11 @@
 ################################################################
 ## Common
 ################################################################
+variable "prefix" {
+  type        = string
+  description = "모든 자원의 prefix 입니다."
+}
+
 variable "vpc_name" {
   type        = string
   description = "vpc name"
@@ -41,4 +46,15 @@ variable "was_subnets" {
 variable "db_subnets" {
   type        = map(string)
   description = "key : a or b, value : cidr_block"
+}
+
+variable "endpoint_setting" {
+  description = "endpoint 설정하기위한 세팅값 입니다"
+
+  default = {
+    s3_is_enable           = true
+    ecr_is_enable          = true
+    sqs_is_enable          = true
+    codepipeline_is_enable = true
+  }
 }

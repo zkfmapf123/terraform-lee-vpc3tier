@@ -6,6 +6,7 @@ provider "aws" {
 module "default-3-tier" {
   source = "../../"
 
+  prefix     = "ex"
   vpc_name   = "poc-vpc"
   vpc_region = "ap-northeast-2"
   vpc_cidr   = "10.0.0.0/16"
@@ -23,6 +24,13 @@ module "default-3-tier" {
   db_subnets = {
     "a" : "10.0.200.0/24"
     "b" : "10.0.201.0/24"
+  }
+
+  endpoint_setting = {
+    s3_is_enable           = true
+    ecr_is_enable          = true
+    sqs_is_enable          = true
+    codepipeline_is_enable = true
   }
 }
 

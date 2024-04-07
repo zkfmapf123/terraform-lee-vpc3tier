@@ -8,7 +8,7 @@ resource "aws_vpc" "vpc" {
   enable_dns_hostnames = true
 
   tags = {
-    Name     = var.vpc_name
+    Name     = "${var.prefix}-${var.vpc_name}"
     Resource = "vpc"
   }
 }
@@ -20,7 +20,7 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name     = "${var.vpc_name}-igw"
+    Name     = "${var.prefix}-${var.vpc_name}-igw"
     Resource = "igw"
   }
 }
@@ -35,7 +35,7 @@ resource "aws_subnet" "webserver_subnets" {
   availability_zone = "${var.vpc_region}${each.key}"
 
   tags = {
-    Name     = "${var.vpc_name}-${var.vpc_region}${each.key}-webserver"
+    Name     = "${var.prefix}-${var.vpc_name}-${var.vpc_region}${each.key}-webserver"
     Resource = "subnet"
     Property = "webserver"
   }
@@ -51,7 +51,7 @@ resource "aws_subnet" "was_subnets" {
   availability_zone = "${var.vpc_region}${each.key}"
 
   tags = {
-    Name     = "${var.vpc_name}-${var.vpc_region}${each.key}-was"
+    Name     = "${var.prefix}-${var.vpc_name}-${var.vpc_region}${each.key}-was"
     Resource = "subnet"
     Property = "was"
   }
@@ -67,7 +67,7 @@ resource "aws_subnet" "db_subnets" {
   availability_zone = "${var.vpc_region}${each.key}"
 
   tags = {
-    Name     = "${var.vpc_name}-${var.vpc_region}${each.key}-db"
+    Name     = "${var.prefix}-${var.vpc_name}-${var.vpc_region}${each.key}-db"
     Resource = "subnet"
     Property = "db"
   }
@@ -85,7 +85,7 @@ resource "aws_route_table" "public_route_table" {
   }
 
   tags = {
-    Name     = "public-rt"
+    Name     = "${var.prefix}-public-rt"
     Resource = "route-table"
   }
 }
@@ -103,7 +103,7 @@ resource "aws_route_table_association" "public-rt-mapping" {
 resource "aws_eip" "nat_eip" {
 
   tags = {
-    Name     = "nat-eip"
+    Name     = "${var.prefix}-nat-eip"
     Resource = "nat-gateway"
   }
 }
@@ -113,7 +113,7 @@ resource "aws_nat_gateway" "nat" {
   subnet_id     = lookup(aws_subnet.webserver_subnets, "a").id
 
   tags = {
-    Name     = "a-nat"
+    Name     = "${var.prefix}-a-nat"
     Resource = "nat"
   }
 }
@@ -127,7 +127,7 @@ resource "aws_route_table" "private_route_table" {
   }
 
   tags = {
-    Name     = "private-rt"
+    Name     = "${var.prefix}-private-rt"
     Resource = "route-table"
   }
 }
@@ -146,7 +146,7 @@ resource "aws_route_table" "db_route_table" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name     = "db-rt"
+    Name     = "${var.prefix}-db-rt"
     Resource = "route-table"
   }
 }

@@ -26,3 +26,7 @@ output "vpc" {
     }
   }
 }
+
+output "s3_endpoint" {
+  value = aws_vpc_endpoint.vpce_s3
+}
