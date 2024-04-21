@@ -101,6 +101,7 @@ resource "aws_route_table_association" "public-rt-mapping" {
 ## was subnet Routing
 ################################################################
 resource "aws_eip" "nat_eip" {
+  count = var.is_enable_nat ? 1 : 0
 
   tags = {
     Name     = "${var.prefix}-nat-eip"
@@ -109,7 +110,9 @@ resource "aws_eip" "nat_eip" {
 }
 
 resource "aws_nat_gateway" "nat" {
-  allocation_id = aws_eip.nat_eip.id
+  count = var.is_enable_nat ? 1 : 0
+
+  allocation_id = aws_eip.nat_eip[0].id
   subnet_id     = lookup(aws_subnet.webserver_subnets, "a").id
 
   tags = {
@@ -121,9 +124,13 @@ resource "aws_nat_gateway" "nat" {
 resource "aws_route_table" "private_route_table" {
   vpc_id = aws_vpc.vpc.id
 
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat.id
+  dynamic "route" {
+    for_each = var.is_enable_nat ? [1] : []
+
+    content {
+      cidr_block     = "0.0.0.0/0"
+      nat_gateway_id = var.is_enable_nat ? aws_nat_gateway.nat[0].id : null
+    }
   }
 
   tags = {

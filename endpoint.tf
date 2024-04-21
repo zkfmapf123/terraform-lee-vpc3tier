@@ -140,3 +140,23 @@ resource "aws_vpc_endpoint" "endpoint_codepipeline" {
     Name = "${var.prefix}-endpoint-codepipeline",
   }
 }
+
+############################################# api gateway endpoint
+resource "aws_vpc_endpoint" "api_gateway_endpoint" {
+  count = lookup(var.endpoint_setting, "apigateway_is_enable") ? 1 : 0
+
+  vpc_id             = aws_vpc.vpc.id
+  service_name       = "com.amazonaws.${var.vpc_region}.execute-api"
+  vpc_endpoint_type  = "Interface"
+  security_group_ids = [aws_security_group.private_sg.id]
+  subnet_ids = [
+    for id, value in aws_subnet.was_subnets :
+    value.id
+  ]
+
+  private_dns_enabled = true
+
+  tags = {
+    Name = "${var.prefix}-endpoint-apigateway",
+  }
+}

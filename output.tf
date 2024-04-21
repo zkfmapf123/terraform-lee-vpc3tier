@@ -1,9 +1,9 @@
 output "vpc" {
   value = {
     vpc_id     = aws_vpc.vpc.id
-    nat_id     = aws_nat_gateway.nat.id
-    nat_eip_id = aws_eip.nat_eip.id
-    nat_eip_ip = aws_eip.nat_eip.public_ip
+    nat_id     = var.is_enable_nat ? aws_nat_gateway.nat[0].id : null
+    nat_eip_id = var.is_enable_nat ? aws_eip.nat_eip[0].id : null
+    nat_eip_ip = var.is_enable_nat ? aws_eip.nat_eip[0].public_ip : null
 
     regions = [
       for az, _ in aws_subnet.webserver_subnets :

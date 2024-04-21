@@ -1,13 +1,20 @@
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-3-tier (webserver, was, db) VPC를 구축하기 위한 테라폼 모듈입니다
+- VPC를 만드는 모듈
+- VPC 
+- Nat 생성여부
+- Endpoint 구성
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
+
+## Modules
+
+No modules.
 
 ## Resources
 
@@ -27,6 +34,7 @@
 | [aws_subnet.was_subnets](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.webserver_subnets](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_vpc.vpc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc) | resource |
+| [aws_vpc_endpoint.api_gateway_endpoint](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_vpc_endpoint.ecr_endpoint_api](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_vpc_endpoint.ecr_endpoint_dkr](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_vpc_endpoint.ecr_endpoint_logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
@@ -39,7 +47,8 @@
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_db_subnets"></a> [db\_subnets](#input\_db\_subnets) | key : a or b, value : cidr\_block | `map(string)` | n/a | yes |
-| <a name="input_endpoint_setting"></a> [endpoint\_setting](#input\_endpoint\_setting) | endpoint 설정하기위한 세팅값 입니다 | `map` | <pre>{<br>  "codepipeline_is_enable": true,<br>  "ecr_is_enable": true,<br>  "s3_is_enable": true,<br>  "sqs_is_enable": true<br>}</pre> | no |
+| <a name="input_endpoint_setting"></a> [endpoint\_setting](#input\_endpoint\_setting) | endpoint 설정하기위한 세팅값 입니다 | `map` | <pre>{<br>  "apigateway_is_enable": true,<br>  "codepipeline_is_enable": true,<br>  "ecr_is_enable": true,<br>  "s3_is_enable": true,<br>  "sqs_is_enable": true<br>}</pre> | no |
+| <a name="input_is_enable_nat"></a> [is\_enable\_nat](#input\_is\_enable\_nat) | nat gateway 활성화 여부 | `bool` | `true` | no |
 | <a name="input_prefix"></a> [prefix](#input\_prefix) | 모든 자원의 prefix 입니다. | `string` | n/a | yes |
 | <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | vpc cidr block | `string` | `"10.0.0.0/16"` | no |
 | <a name="input_vpc_name"></a> [vpc\_name](#input\_vpc\_name) | vpc name | `string` | n/a | yes |

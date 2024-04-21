@@ -24,6 +24,12 @@ variable "vpc_cidr" {
   default     = "10.0.0.0/16"
 }
 
+variable "is_enable_nat" {
+  type        = bool
+  description = "nat gateway 활성화 여부"
+  default     = true
+}
+
 ################################################################
 ## webserver subnet
 ################################################################
@@ -55,6 +61,7 @@ variable "endpoint_setting" {
     s3_is_enable           = true
     ecr_is_enable          = true
     sqs_is_enable          = true
+    apigateway_is_enable   = true
     codepipeline_is_enable = true
   }
 }
