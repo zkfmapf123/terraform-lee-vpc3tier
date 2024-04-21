@@ -11,6 +11,7 @@ module "default-3-tier" {
   vpc_region = "ap-northeast-2"
   vpc_cidr   = "10.0.0.0/16"
 
+  is_enable_nat = true
   webserver_subnets = {
     "a" : "10.0.1.0/24"
     "b" : "10.0.2.0/24"
@@ -27,10 +28,11 @@ module "default-3-tier" {
   }
 
   endpoint_setting = {
-    s3_is_enable           = true
-    ecr_is_enable          = true
-    sqs_is_enable          = true
-    codepipeline_is_enable = true
+    s3_is_enable           = false
+    ecr_is_enable          = false
+    sqs_is_enable          = false
+    codepipeline_is_enable = false
+    apigateway_is_enable   = false
   }
 }
 
