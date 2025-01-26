@@ -1,10 +1,7 @@
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-- VPC를 만드는 모듈
-- VPC 
-- Nat 생성여부
-- Endpoint 구성
+No requirements.
 
 ## Providers
 
@@ -47,7 +44,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_db_subnets"></a> [db\_subnets](#input\_db\_subnets) | key : a or b, value : cidr\_block | `map(string)` | n/a | yes |
-| <a name="input_endpoint_setting"></a> [endpoint\_setting](#input\_endpoint\_setting) | endpoint 설정하기위한 세팅값 입니다 | `map` | <pre>{<br>  "apigateway_is_enable": true,<br>  "codepipeline_is_enable": true,<br>  "ecr_is_enable": true,<br>  "s3_is_enable": true,<br>  "sqs_is_enable": true<br>}</pre> | no |
+| <a name="input_endpoint_setting"></a> [endpoint\_setting](#input\_endpoint\_setting) | endpoint 설정하기위한 세팅값 입니다 | `map` | <pre>{<br/>  "apigateway_is_enable": true,<br/>  "codepipeline_is_enable": true,<br/>  "ecr_is_enable": true,<br/>  "s3_is_enable": true,<br/>  "sqs_is_enable": true<br/>}</pre> | no |
 | <a name="input_is_enable_nat"></a> [is\_enable\_nat](#input\_is\_enable\_nat) | nat gateway 활성화 여부 | `bool` | `true` | no |
 | <a name="input_prefix"></a> [prefix](#input\_prefix) | 모든 자원의 prefix 입니다. | `string` | n/a | yes |
 | <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | vpc cidr block | `string` | `"10.0.0.0/16"` | no |
