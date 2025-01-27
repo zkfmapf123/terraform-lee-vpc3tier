@@ -65,3 +65,11 @@ variable "endpoint_setting" {
     codepipeline_is_enable = true
   }
 }
+
+variable "public_tags" {
+  default = {}
+}
+
+variable "private_tags" {
+  default = {}
+}

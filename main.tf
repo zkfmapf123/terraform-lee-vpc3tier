@@ -34,11 +34,11 @@ resource "aws_subnet" "webserver_subnets" {
   cidr_block        = each.value
   availability_zone = "${var.vpc_region}${each.key}"
 
-  tags = {
+  tags = merge({
     Name     = "${var.prefix}-${var.vpc_name}-${var.vpc_region}${each.key}-webserver"
     Resource = "subnet"
     Property = "webserver"
-  }
+  }, var.public_tags)
 }
 
 ################################################################
@@ -50,11 +50,11 @@ resource "aws_subnet" "was_subnets" {
   cidr_block        = each.value
   availability_zone = "${var.vpc_region}${each.key}"
 
-  tags = {
+  tags = merge({
     Name     = "${var.prefix}-${var.vpc_name}-${var.vpc_region}${each.key}-was"
     Resource = "subnet"
     Property = "was"
-  }
+  }, var.private_tags)
 }
 
 ################################################################
